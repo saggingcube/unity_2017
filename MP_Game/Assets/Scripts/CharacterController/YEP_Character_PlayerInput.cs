@@ -7,8 +7,10 @@ public class YEP_Character_PlayerInput : MonoBehaviour
 
     public float mouseX;
     public float mouseY;
+
     public float horizontal;
     public float vertical;
+
     public bool mouse1;
     public bool mouse2; 
 	
@@ -19,7 +21,7 @@ public class YEP_Character_PlayerInput : MonoBehaviour
         mouseY = Input.GetAxis("Mouse Y");
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        mouse1 = Input.GetButton("Fire1");
-        mouse2 = Input.GetButton("Fire2");
+        mouse1 = Input.GetKeyDown(KeyCode.Mouse0);
+        mouse2 = Input.GetKeyDown(KeyCode.Mouse1);
     }
 }
