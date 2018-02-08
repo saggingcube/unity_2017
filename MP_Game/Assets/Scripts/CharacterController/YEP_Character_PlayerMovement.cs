@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class YEP_CharacterMovement : MonoBehaviour {
+public class YEP_Character_PlayerMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class YEP_CharacterInput : MonoBehaviour
+public class YEP_Character_PlayerInput : MonoBehaviour
 {
 
     public float mouseX;
