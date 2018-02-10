@@ -10,12 +10,19 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     public float runSpeed;
 
     public bool isGrounded;
+    public bool isSprinting;
+
     RaycastHit hitInfo;
+    CapsuleCollider capsuleCollider;
+    public LayerMask ground;
+    public float height; 
 
     // Use this for initialization
     void Start ()
     {
         playerInput = GetComponent<YEP_Character_PlayerInput>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        height = capsuleCollider.height;
 	}
 	
 	// Update is called once per frame
@@ -29,7 +36,7 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     void GroundCheck()
     {
         
-        if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, 2))
+        if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, 1, ground))
         {
             isGrounded = true;
         }
@@ -49,7 +56,17 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
 
     void HandleMovement()
     {
-        transform.Translate(playerInput.horizontal * Time.deltaTime * movementSpeed, 0, playerInput.vertical * Time.deltaTime * movementSpeed);
+        isSprinting = playerInput.sprint;
+        
+        if(!isSprinting)
+        {
+            transform.Translate(playerInput.horizontal * Time.deltaTime * movementSpeed, 0, playerInput.vertical * Time.deltaTime * movementSpeed);
+        }
+        else
+        {
+            transform.Translate(playerInput.horizontal * Time.deltaTime * runSpeed, 0, playerInput.vertical * Time.deltaTime * runSpeed);
+        }
+        
     }
 
 }
