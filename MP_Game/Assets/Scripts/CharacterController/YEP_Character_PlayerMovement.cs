@@ -11,6 +11,7 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
 
     public bool isGrounded;
     public bool isSprinting;
+    public bool canJump;
 
     RaycastHit hitInfo;
     CapsuleCollider capsuleCollider;
@@ -48,7 +49,7 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
 
     void HandleGravity()
     {
-        if(!isGrounded)
+        if(!isGrounded && !canJump)
         {
             transform.position += Physics.gravity * Time.deltaTime;
         }        
@@ -57,6 +58,7 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     void HandleMovement()
     {
         isSprinting = playerInput.sprint;
+        canJump = playerInput.jump;
         
         if(!isSprinting)
         {
@@ -64,7 +66,12 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
         }
         else
         {
-            transform.Translate(playerInput.horizontal * Time.deltaTime * runSpeed, 0, playerInput.vertical * Time.deltaTime * runSpeed);
+            transform.Translate(playerInput.horizontal * Time.deltaTime * runSpeed, 0, playerInput.vertical * Time.deltaTime * runSpeed);            
+        }
+
+        if(isGrounded && canJump)
+        {
+
         }
         
     }

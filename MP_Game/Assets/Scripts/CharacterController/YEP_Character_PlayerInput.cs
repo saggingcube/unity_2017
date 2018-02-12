@@ -11,6 +11,7 @@ public class YEP_Character_PlayerInput : MonoBehaviour
     public float horizontal;
     public float vertical;
     public bool sprint;
+    public bool jump;
 
     public bool mouse1;
     public bool mouse2; 
@@ -23,7 +24,8 @@ public class YEP_Character_PlayerInput : MonoBehaviour
         //
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        sprint = Input.GetKeyDown(KeyCode.LeftShift);
+        sprint = Input.GetKey(KeyCode.LeftShift);
+        jump = Input.GetKeyDown(KeyCode.Space);
         //
         mouse1 = Input.GetKeyDown(KeyCode.Mouse0);
         mouse2 = Input.GetKeyDown(KeyCode.Mouse1);
