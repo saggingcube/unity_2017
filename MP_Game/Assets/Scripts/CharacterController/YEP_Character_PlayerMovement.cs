@@ -9,21 +9,33 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     public float movementSpeed;
     public float runSpeed;
 
+    public float velocity;
+
+    private Vector3 previousPos;
+    public Vector3 forwardPos;
+
+    private Vector2 _input;
+
     public bool isGrounded;
     public bool isSprinting;
     public bool canJump;
 
     RaycastHit hitInfo;
-    CapsuleCollider capsuleCollider;
-    public LayerMask ground;
-    public float height; 
+    CapsuleCollider capsuleController;
+    public LayerMask _ground;
+    public float _height;
+
+
+    public float maxAngle = 120f;
+    public float _angle;
+    public float groundAngle;
 
     // Use this for initialization
     void Start ()
     {
         playerInput = GetComponent<YEP_Character_PlayerInput>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        height = capsuleCollider.height;
+        capsuleController = GetComponent<CapsuleCollider>();
+        _height = capsuleController.height;
 	}
 	
 	// Update is called once per frame
@@ -31,13 +43,14 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     {
         GroundCheck();
         HandleGravity();
-        HandleMovement();
+        CalculateForward();
+        HandleMovement();        
+        CalculateGroundAngle();
 	}
 
     void GroundCheck()
     {
-        
-        if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, 1, ground))
+        if (Physics.SphereCast(transform.position, capsuleController.radius, Vector3.down, out hitInfo, capsuleController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore))
         {
             isGrounded = true;
         }
@@ -45,6 +58,15 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
+        
+        //if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo, 1, _ground))
+        //{
+        //    isGrounded = true;
+        //}
+        //else
+        //{
+        //    isGrounded = false;
+        //}
     }
 
     void HandleGravity()
@@ -59,21 +81,66 @@ public class YEP_Character_PlayerMovement : MonoBehaviour
     {
         isSprinting = playerInput.sprint;
         canJump = playerInput.jump;
+
+        velocity = ((transform.position - previousPos).magnitude) / Time.deltaTime;
+        previousPos = transform.position;
+
+        _input = new Vector2(playerInput.vertical, playerInput.horizontal);
+
+        if(_input.sqrMagnitude > 1 )
+        {
+            _input.Normalize();
+        }
+
+        Vector3 desiredMove = forwardPos * _input.x + transform.right * _input.y;
+
+       
         
         if(!isSprinting)
         {
-            transform.Translate(playerInput.horizontal * Time.deltaTime * movementSpeed, 0, playerInput.vertical * Time.deltaTime * movementSpeed);
+            //transform.Translate(playerInput.horizontal * Time.deltaTime * movementSpeed, 0, playerInput.vertical * Time.deltaTime * movementSpeed);
+            transform.position += desiredMove * movementSpeed * Time.deltaTime;
+            
+            //Show normal direction
+            Debug.DrawLine(transform.position, transform.position + forwardPos * _height, Color.blue);
         }
         else
         {
-            transform.Translate(playerInput.horizontal * Time.deltaTime * runSpeed, 0, playerInput.vertical * Time.deltaTime * runSpeed);            
-        }
+            //transform.Translate(playerInput.horizontal * Time.deltaTime * runSpeed, 0, playerInput.vertical * Time.deltaTime * runSpeed);
 
-        if(isGrounded && canJump)
-        {
-
-        }
+            transform.position += desiredMove * runSpeed * Time.deltaTime;
+        }       
         
+    }
+
+    void CalculateForward()
+    {
+        if(!isGrounded)
+        {
+            forwardPos = transform.forward;
+            return;
+        }
+
+        forwardPos = Vector3.Cross(hitInfo.normal, -transform.right);
+    }
+
+    void CalculateGroundAngle()
+    {
+        if(!isGrounded)
+        {
+            groundAngle = 90;
+            return;
+        }
+
+        groundAngle = Vector3.Angle(hitInfo.normal, transform.forward);
+    }
+
+    private void OnGUI()
+    {
+        GUI.color = Color.black;
+        GUI.Label(new Rect(0, 0, 400, 100), "Velocity: " + Mathf.Round(velocity * 100) / 100);
+        GUI.Label(new Rect(0, 15, 400, 100), "Sprinting: " + isSprinting);
+        GUI.Label(new Rect(0, 30, 400, 100), "Grounded: " + isGrounded);
     }
 
 }

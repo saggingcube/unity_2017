@@ -223,12 +223,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 3
   runSpeed: 5
+  velocity: 0
   isGrounded: 0
   isSprinting: 0
+  canJump: 0
   ground:
     serializedVersion: 2
-    m_Bits: 0
-  height: 0
+    m_Bits: 256
+  height: 1
+  maxAngle: 0
+  angle: 0
+  groundAngle: 0
 --- !u!114 &114479078907235948
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -245,6 +250,7 @@ MonoBehaviour:
   horizontal: 0
   vertical: 0
   sprint: 0
+  jump: 0
   mouse1: 0
   mouse2: 0
 --- !u!114 &114714498303900094
